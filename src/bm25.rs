@@ -29,7 +29,7 @@ impl BM25Retriever {
         let stemmer = Stemmer::create(Algorithm::English);
         let tokens= document
             .to_lowercase()
-            .split_whitespace()
+            .split(&['-', ' '][..])
             .map(|word| stemmer.stem(&word).to_string())
             .collect();
         return tokens;
@@ -80,7 +80,7 @@ impl BM25Retriever {
         }
         // Sort documents by query scores in descending order
         query_scores.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
-        println!("Query scores: {:?}", query_scores);
+        // println!("Query scores: {:?}", query_scores);
 
         // Return the top-k relevant documents
         query_scores.into_iter().take(top_k).collect()
